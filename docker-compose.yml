@@ -1,0 +1,33 @@
+version: '3'
+services:
+  proxy_nginx:
+    container_name: "proxy_nginx"
+    build: ./docker/nginx/
+    ports:
+      - "80:80"
+      - "6001:6001"
+    volumes:
+      - .:/var/www/project/current
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - proxy_php
+  proxy_php:
+    container_name: "proxy_php"
+    build: ./docker/php/
+    volumes:
+      - .:/var/www/project/current/
+      - ./docker/php/conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini
+    environment:
+      PHP_EXTENSION_XDEBUG: ${PHP_EXTENSION_XDEBUG:-false}
+    extra_hosts:
+      host.docker.internal: host-gateway
+volumes:
+  postgres_volume:
+    driver: local
+  postgrestest_volume:
+    driver: local
+  pgadmin_volume:
+    driver: local
+  proxy_elasticsearch_volume:
+    driver: local
+
