@@ -22,15 +22,15 @@ RUN apt-get update && \
     docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ && \
     docker-php-ext-install gd
 
-RUN docker-php-ext-install \
-    pdo \
-    pdo_mysql \
-    pdo_pgsql \
-    sockets \
-    bcmath \
-    fileinfo \
-    gettext \
-    pcntl
+# RUN docker-php-ext-install \
+#     pdo \
+#     pdo_mysql \
+#     pdo_pgsql \
+#     sockets \
+#     bcmath \
+#     fileinfo \
+#     gettext \
+#     pcntl
 #    gmp
 
 RUN apt-get update && \
@@ -38,18 +38,16 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Xdebug
-RUN pecl install xdebug && \
-    rm -rf /tmp/pear
+# RUN pecl install xdebug && \
+#     rm -rf /tmp/pear
 
-# Xhprof
-RUN pecl install xhprof && \
-    rm -rf /tmp/pear
+# # Xhprof
+# RUN pecl install xhprof && \
+#     rm -rf /tmp/pear
 
 WORKDIR /var/www/project/current
 
 # USER www-data
 USER $USER
 
-CMD ([ "$PHP_EXTENSION_XDEBUG" = "true" ] && docker-php-ext-enable xdebug) ; \
-    ([ "$PHP_EXTENSION_XHPROF" = "true" ] && docker-php-ext-enable xhprof) ; \
-    php-fpm
+CMD php-fpm
