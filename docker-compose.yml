@@ -4,7 +4,7 @@ services:
     container_name: "proxy_nginx"
     build: ./docker/nginx/
     ports:
-      - "8080:80"
+      - "8081:80"
     volumes:
       - .:/var/www/project/current
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
@@ -16,8 +16,6 @@ services:
     volumes:
       - .:/var/www/project/current/
       - ./docker/php/conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini
-    environment:
-      PHP_EXTENSION_XDEBUG: ${PHP_EXTENSION_XDEBUG:-false}
     extra_hosts:
       host.docker.internal: host-gateway
 
