@@ -9,7 +9,7 @@ if [ $# -gt 0 ]; then
         docker compose -f docker-compose.yml stop
     elif [ "$1" == "build" ]; then
         shift 1
-        docker compose up -d --build --force-recreate --no-cache
+        docker compose up -d --build --force-recreate
     else
         echo "./develop: Unknown command '$@'"
     fi
