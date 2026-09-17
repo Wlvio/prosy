@@ -30,4 +30,9 @@ services:
     shm_size: 1g
     extra_hosts:
       host.docker.internal: host-gateway
+    tmpfs:
+      - /tmp:noexec,suid,dev,size=512m
+      - /home/chrome/.config/chromium/Default/Cache:noexec,suid,dev,size=256m
+      - /home/chrome/.config/chromium/Default/Local Storage:noexec,suid,dev,size=128m
+      - /home/chrome/.config/chromium/Default/IndexedDB:noexec,suid,dev,size=128m
 
