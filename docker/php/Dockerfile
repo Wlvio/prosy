@@ -1,29 +1,20 @@
-# Используем базовый образ PHP 8.2-fpm
-FROM php:8.2-fpm-bookworm
+FROM php:8.2-fpm
 
-# Установите необходимые системные зависимости
 RUN apt-get update && \
-    apt-get install -y apt-transport-https ca-certificates && \
-    
-# Добавьте репозиторий с корректными ключами
-RUN echo "deb [arch=amd64] https://deb.debian.org/debian bookworm main" > /etc/apt/sources.list.d/bookworm.list && \
-    echo "deb [arch=amd64] https://deb.debian.org/debian-security/ bookworm-security main" >> /etc/apt/sources.list.d/bookworm-security.list
+  apt-get install -y htop nano vim procps net-tools && \
+  rm -rf /var/lib/apt/lists/*
 
-# Добавьте ключ репозитория
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0x112ABCDEF && \
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0x12345678
-
-# Обновите систему и установите необходимые пакеты
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN apt-get update && \
-    apt-get install -y htop nano vim procps net-tools && \
+    apt-get install zip unzip && \
     rm -rf /var/lib/apt/lists/*
 
-# Установите Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Установите дополнительные зависимости
 RUN apt-get update && \
-    apt-get install -y zip unzip wget libpq-dev libssl-dev && \
+    apt-get install -y wget && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && \
+    apt-get install -y libpq-dev libssl-dev && \
     rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && \
@@ -31,13 +22,32 @@ RUN apt-get update && \
     docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ && \
     docker-php-ext-install gd
 
+# RUN docker-php-ext-install \
+#     pdo \
+#     pdo_mysql \
+#     pdo_pgsql \
+#     sockets \
+#     bcmath \
+#     fileinfo \
+#     gettext \
+#     pcntl
+#    gmp
+
 RUN apt-get update && \
     apt-get install -y git && \
     rm -rf /var/lib/apt/lists/*
 
+# Xdebug
+# RUN pecl install xdebug && \
+#     rm -rf /tmp/pear
+
+# # Xhprof
+# RUN pecl install xhprof && \
+#     rm -rf /tmp/pear
+
 WORKDIR /var/www/project/current
 
-# Установите пользователя
+# USER www-data
 USER $USER
 
-CMD ["php-fpm"]
+CMD php-fpm
